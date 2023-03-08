@@ -1,0 +1,9 @@
+vpc_cidr                          = "10.11.0.0/16"
+public_subnet_cidr                = "10.11.1.0/24"
+aws_region                        = "us-west-2"
+linux_instance_type               = "t3a.xlarge"
+linux_associate_public_ip_address = true
+linux_root_volume_size            = 20
+linux_root_volume_type            = "gp2"
+linux_data_volume_size            = 10
+linux_data_volume_type            = "gp2"
