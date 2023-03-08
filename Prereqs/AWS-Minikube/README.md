@@ -89,6 +89,66 @@ minikube start -p dc1
 minikube start -p dc2
 ```
 
+# Configure MetalLb
+
+1. Check that the minikube metallb add on is available for the dc1 cluster:
+```
+minikube addons -p *dc1* list | grep metallb
+```
+   This is the expected output: 
+```
+| metallb                     | dc1     | disabled     | 3rd party (MetalLB)            |
+```
+
+2. Enable metallb for cluster dc1:
+```
+minikube addons -p *dc1* enable metallb
+```
+
+3. Configure the IP address pool for metallb:
+```
+minikube addons -p *dc1* configure metallb
+```
+   Below are example values used for dc1 and output, the IP address range will be dependant upon the EC2 instance VPC:
+```
+-- Enter Load Balancer Start IP: 10.11.1.70
+-- Enter Load Balancer End IP: 10.11.1.80
+    ▪ Using image docker.io/metallb/speaker:v0.9.6
+    ▪ Using image docker.io/metallb/controller:v0.9.6
+✅  metallb was successfully configured
+```
+
+4. Check that configuration details entered are reflected in the metallb config map:
+
+```
+kubectl config use_context dc1
+kubectl get configmap/config -n metallb-system -o yaml
+```
+   Example output:   
+```
+apiVersion: v1
+data:
+  config: |
+    address-pools:
+    - name: default
+      protocol: layer2
+      addresses:
+      - 10.11.1.70-10.11.1.80
+kind: ConfigMap
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"config":"address-pools:\n- name: default\n  protocol: layer2\n  addresses:\n  - 10.11.1.70-10.11.1.80\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"config","namespace":"metallb-system"}}
+  creationTimestamp: "2023-03-08T13:18:17Z"
+  name: config
+  namespace: metallb-system
+  resourceVersion: "3302"
+  uid: f8e38c33-88f4-4a56-8e6b-751e61091bb6
+```
+
+5. Repeat steps 1 through to 3, replacing all references to *dc1* with *dc2*, also the IP address range used when configuring metallb
+   should not overlap the range used for 
+
 # Install Client Tools
 
 1. Install kubectl:
