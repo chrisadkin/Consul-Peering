@@ -93,7 +93,7 @@ minikube start -p dc2
 
 1. Check that the minikube metallb add on is available for the dc1 cluster:
 ```
-minikube addons -p *dc1* list | grep metallb
+minikube addons -p **dc1** list | grep metallb
 ```
    This is the expected output: 
 ```
@@ -102,12 +102,12 @@ minikube addons -p *dc1* list | grep metallb
 
 2. Enable metallb for cluster dc1:
 ```
-minikube addons -p *dc1* enable metallb
+minikube addons -p **dc1** enable metallb
 ```
 
 3. Configure the IP address pool for metallb:
 ```
-minikube addons -p *dc1* configure metallb
+minikube addons -p **dc1** configure metallb
 ```
    Below are example values used for dc1 and output, the IP address range will be dependant upon the EC2 instance VPC:
 ```
@@ -121,7 +121,7 @@ minikube addons -p *dc1* configure metallb
 4. Check that configuration details entered are reflected in the metallb config map:
 
 ```
-kubectl config use_context dc1
+kubectl config use_context **dc1**
 kubectl get configmap/config -n metallb-system -o yaml
 ```
    Example output:   
@@ -146,7 +146,7 @@ metadata:
   uid: f8e38c33-88f4-4a56-8e6b-751e61091bb6
 ```
 
-5. Repeat steps 1 through to 3, replacing all references to *dc1* with *dc2*, also the IP address range used when configuring metallb
+5. Repeat steps 1 through to 3, replacing all references to **dc1** with **dc2**, also the IP address range used when configuring metallb
    should not overlap the range used for 
 
 # Install Client Tools
