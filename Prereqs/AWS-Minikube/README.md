@@ -1,6 +1,4 @@
-# EC2 Instance Creation
-
--- Running The Terraform Configuration 
+# EC2 Instance Creation 
 
 1. Clone this repository:
 ```
