@@ -93,7 +93,7 @@ minikube start -p dc2
 
 1. Check that the minikube metallb add on is available for the dc1 cluster:
 ```
-minikube addons -p **dc1** list | grep metallb
+minikube addons -p dc1 list | grep metallb
 ```
    This is the expected output: 
 ```
@@ -102,7 +102,7 @@ minikube addons -p **dc1** list | grep metallb
 
 2. Enable metallb for cluster dc1:
 ```
-minikube addons -p **dc1** enable metallb
+minikube addons -p dc1 enable metallb
 ```
 
 3. Configure the IP address pool for metallb:
@@ -121,7 +121,7 @@ minikube addons -p **dc1** configure metallb
 4. Check that configuration details entered are reflected in the metallb config map:
 
 ```
-kubectl config use_context **dc1**
+kubectl config use_context dc1
 kubectl get configmap/config -n metallb-system -o yaml
 ```
    Example output:   
