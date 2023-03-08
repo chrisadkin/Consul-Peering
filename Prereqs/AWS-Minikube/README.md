@@ -107,3 +107,12 @@ CURRENT   NAME   CLUSTER   AUTHINFO   NAMESPACE
           dc1    dc1       dc1        default
 *         dc2    dc2       dc2        default
 ```
+
+3. Install Helm:
+```
+sudo yum install wget
+wget https://get.helm.sh/helm-v3.11.1-linux-amd64.tar.gz
+tar xvf helm-v3.11.1-linux-amd64.tar.gz
+cd linux-amd64/
+sudo mv helm /usr/local/bin/.
+```
