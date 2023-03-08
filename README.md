@@ -47,8 +47,9 @@ Failover to the counting service residing on dc2 can be observed via the dashboa
 ![image](https://github.com/chrisadkin/Consul-Peering/blob/main/images/01-two-dc-configuration.png)
 
 # Instructions for Deploying and Running The Demonstration
-[1. Azure Kubernetes Service cluster creation](https://github.com/chrisadkin/Consul-Peering/tree/main/Azure-Prereqs)  
-    This step can be skipped if you already have two Kubernetes clusters that neet the minimum resource requirements for Consul.
+1. At present there are two Terraform configurations for provisioning the base infrastructure: 
+- [Azure Kubernetes Services](https://github.com/chrisadkin/Consul-Peering/tree/main/Azure-Prereqs)  
+- [Minikube on AWS EC2 instances](https://github.com/chrisadkin/Consul-Peering/tree/main/AWS-Minikube)  
 
 [2. Deploy Consul](https://github.com/chrisadkin/Consul-Peering/tree/main/Installation)  
 
