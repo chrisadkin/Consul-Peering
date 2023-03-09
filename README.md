@@ -1,32 +1,6 @@
 # Cluster Peering Failover Demonstration
 
-## Directory Structure
-
-### Peering of DCs
-
-- Helm chart in the DC1 directory and the config files are all in DC1/01-AP-default-default-failover/countingapp
-- Helm chart in the DC2 directory and the config files are all in DC2/01-AP-default-default-failover/countingapp
-```
-DC1 configuration -----> DC1/01-AP-default-default-failover/
-DC2 configuration -----> DC2/01-AP-default-default-failover/
-```
-### Admin Partition on client clusters
-
-Helm chart in the DC1 directory and the config files are all in DC1/02-AP-diffAP-failover/countingapp
-- Helm chart in the DC2 directory and the config files are all in DC2/02-AP-diffAP-failover/countingapp
-```
-DC1 configuration -----> DC1/02-AP-diffAP-failover/
-DC2 configuration -----> DC2/02-AP-diffAP-failover/
-DC3 configuration -----> DC3/01-AP-default-default-failover/
-```
-This demo will showcase the ability to failover services between two Consul datacenters (dc1 and dc2) that have been connected via Cluster peering. 
-We will deploy a counting app where a dashboard service will connect to the upstream counting service. Both services will reside on dc1.
-
-In this demo another instance of the counting service runs on dc2 a failure of the counting service on dc1 will be simulated by taking down the whole counting service deployment. 
-
-Failover to the counting service residing on dc2 can be observed via the dashboard.
-
-# Prerequisites
+## Prerequisites
 
 ## Client Tools Requirements
 
