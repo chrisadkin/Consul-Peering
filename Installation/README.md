@@ -8,7 +8,7 @@ git clone https://github.com/chrisadkin/Cluster-Peering.git
 2. Nagivate to the **cluster-peering-failover-demo/countingapp** folder. 
 
 ```
-cd cluster-peering-failover-demo/countingapp
+cd Cluster-Peering/countingapp
 ```
 
 3. Set environemetal variables for kubernetes cluster dc1 and dc2
