@@ -1,83 +1,15 @@
-# Cluster Peering Failover Demonstration
-
-## DIRECTORY INDEX
-
-### Peering of DCs
-
-- Helm chart in the DC1 directory and the config files are all in DC1/01-AP-default-default-failover/countingapp
-- Helm chart in the DC2 directory and the config files are all in DC2/01-AP-default-default-failover/countingapp
-```
-DC1 configuration -----> DC1/01-AP-default-default-failover/
-DC2 configuration -----> DC2/01-AP-default-default-failover/
-```
-### Admin Partition on client clusters
-
-Helm chart in the DC1 directory and the config files are all in DC1/02-AP-diffAP-failover/countingapp
-- Helm chart in the DC2 directory and the config files are all in DC2/02-AP-diffAP-failover/countingapp
-```
-DC1 configuration -----> DC1/02-AP-diffAP-failover/
-DC2 configuration -----> DC2/02-AP-diffAP-failover/
-DC3 configuration -----> DC3/01-AP-default-default-failover/
-```
-This demo will showcase the ability to failover services between two Consul datacenters (dc1 and dc2) that have been connected via Cluster peering. 
-We will deploy a counting app where a dashboard service will connect to the upstream counting service. Both services will reside on dc1.
-
-In this demo another instance of the counting service runs on dc2 a failure of the counting service on dc1 will be simulated by taking down the whole counting service deployment. 
-
-Failover to the counting service residing on dc2 can be observed via the dashboard.
-
-# Prerequisites
-
-## Client Tools Requirements
-
-- [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
-- [Helm version 3.6 or above](https://helm.sh/docs/intro/quickstart/)
-- A command shell that supports basic Linux commands such as export
-
-## Kubernetes Requirements
-
-* A minimum of two Kubernetes cluster with one worker node per cluster
-* Node resource requirements are detailed in the [System Requirements section of this Consul reference architecture document](https://developer.hashicorp.com/consul/tutorials/production-deploy/reference-architecture) , the minimum requirements for a node are: 
-  * 2 logical processors
-  * 8GB RAM
-  * 100GB storage
-  * Storage performance of 3000 IOPS
-  * Storage IO throughput of 75 MB/s
-
-![image](https://github.com/chrisadkin/Consul-Peering/blob/main/images/01-two-dc-configuration.png)
-
-    Note: 
-    - If using AKS, you can use the Kubenet CNI or the Azure CNI. The Consul control plane and data plane will use Load Balancers (via Consul mesh gateways)to communicate between Consul datacenters.
-    - Since Load Balancers are used on both control plane and data plane, each datacenter can reside on different networks (VNETS, VPCs) or even different clouds (AWS, Azure GCP, private, etc). No direct network connections (ie peering connections) are required. 
-    
-2. Add or update your hashicorp helm repo:
-
-```
-helm repo add hashicorp https://helm.releases.hashicorp.com
-```
-or
-```
-helm repo update hashicorp
-```
-
-[Deploying The Components for the Demonstration](https://github.com/chrisadkin/Consul-Peering/tree/main/Installation)  
-
 # Create cluster peering connection
 
 You can establish the peering connections using the Consul UI or using Kubernetes CRDs. The steps using the UI are extremely easy and straight forward so we will focus on using the Kubernetes CRDs in this section.
 
 10. If your Consul clusters are on different non-routable networks (no VPC/VPN peering), then you will need to set the Consul servers (control plane) to use mesh gateways to request/accept peering connection. Just apply the meshgw.yaml file on both Kubernetes cluster. 
 
-If you try to establish a peer and get the following error below you will need to deploy the mesh gateways
-
-![image](https://user-images.githubusercontent.com/81739850/221875916-728fd432-0539-4241-baf9-0b51f4508a77.png)
-
 
 ```
 kubectl apply -f meshgw.yaml --context $dc1
 kubectl apply -f meshgw.yaml --context $dc2
 ```
-You can either use the UI or configuration to setup peering, UI pretty straightforwad to follow
+
 
 **If you prefer to use the UI to establish the peered connection, the general steps are:**
   - Log onto Consul UI for dc1, navigate to the Peers side tab on the left hand side.
@@ -110,8 +42,6 @@ dc2    True     2m46s         2m47s
 ```
 
 Notice a secret called peering-token-dc2 is created.
-
-All files located in DC1/countingapp/
 ```
 kubectl get secrets --context $dc1
 ```
@@ -134,10 +64,6 @@ kubectl apply -f  dialer-dc2.yaml --context $dc2
 kubectl apply -f exportedsvc-counting.yaml --context $dc2
 ```
 
-![image](https://user-images.githubusercontent.com/81739850/221921004-c9a2196c-db2a-4bf2-8016-d25d1f44f755.png)
-
-
-
 16. Apply service-resolver file on dc1. This service-resolver.yaml file will tell Consul on dc1 how to handle failovers if the counting service fails locally. 
 
 Note: Make sure the name of the peer in the service-resolver file matches the name to gave for each peer when you established peering (either in the UI or using CRD acceptor and dialer files).
@@ -152,11 +78,7 @@ Note: The UI on Consul version 1.14 does not yet recognize peers for Intention c
 
 ```
 kubectl apply -f intentions.yaml --context $dc2
-
 ```
-
-![image](https://user-images.githubusercontent.com/81739850/221922179-a6fd37ff-0cda-44df-859b-8bf4edee09b2.png)
-
 
 18. Apply the proxy-defaults on both datacenters to ensure data plane traffic goes via local mesh gateways 
 ```
@@ -177,14 +99,10 @@ kubectl delete -f counting.yaml --context $dc1
 ![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/Screen%20Shot%202022-09-13%20at%205.13.46%20PM.png "Cluster Peering Demo")
 
 
-![image](https://user-images.githubusercontent.com/81739850/221921318-28751993-df61-416e-9469-6b51728b8c7c.png)
-
-
 21. Bring counting service on dc1 back up.
 ```
 kubectl apply -f counting.yaml --context $dc1
 ```
-![image](https://user-images.githubusercontent.com/81739850/221921950-3a5b5d38-496c-4ead-92c2-7d044a9623c3.png)
 
 
 22. Observe the dashboard service on your browser. Notice the the dashboard URL shows the counter has restarted again since it automatically fails back to the original service on dc1.
@@ -192,18 +110,15 @@ kubectl apply -f counting.yaml --context $dc1
 
 # (Optional) Deploy Consul (dc3) on EKS Cluster and peer between dc1 as dc3.
 
-![image](https://user-images.githubusercontent.com/81739850/221881568-a6f11dc6-dacf-4f7b-9c8e-c570ebe822eb.png)
-
-
 
 This portion is optional if you want to failover to AWS Elastic Kubernetes Service (EKS).   
 We will create a peering connection between dc1 and dc3 (on EKS) and failover the counting service to dc3.
 This portion assumes you already have an Elastic Kubernetes Service (EKS) cluster deployed on AWS.  
 
+![image](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/Screen%20Shot%202022-09-22%20at%2011.02.29%20AM.png)
+
 
 1. Connect your local terminal to your EKS cluster.
-
-Terraform files can be located DC3/DC3-K8cluster to build a cluster
 
 ```
 aws eks --region <your-aws-region> update-kubeconfig --name <your-eks-cluster-name>
@@ -222,7 +137,7 @@ export dc3=<your EKS cluster context>
 kubectl config use-context $dc3
 ``` 
 ```
-helm install $dc3 hashicorp/consul --version $VERSION --values apservice-dc3.yaml.yaml --set global.datacenter=dc3
+helm install $dc3 hashicorp/consul --version $VERSION --values consul-values.yaml --set global.datacenter=dc3
 ```
   
 
@@ -230,7 +145,7 @@ Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashi
 	
 	If not, you need to upgrade your helm deployment:    
 	
-	```helm upgrade $dc3 hashicorp/consul --version $VERSION --values apservice-dc3.yaml.yaml```
+	```helm upgrade $dc3 hashicorp/consul --version $VERSION --values consul-values.yaml```
 
 5. A
 
@@ -308,63 +223,3 @@ kubectl delete -f counting.yaml --context $dc2
 13. Back on your browser, check the dashboard UI to see the counter has reset and is running.
 
 
-cluster-client-connectivity & failover-demo
-This demo will showcase the ability to connect a client kubernetes cluster into DC1 and failover services between two Consul clusters (default and partition1) that have been connected via consuld ataplane. 
-
-# Deploy Consul on client Kubernetes cluster to connect to kubernetes server cluster (dc1).
-
-1 If required there is a Terraform code to deploy a cluster ---> DC3/DC3-K8cluster
-
-2 You can run terraform plan and deploy within the directory to build a cluster will take several minutes
-
-3. Copy the server certificate to the non-default partition cluster running your workloads
-
-```
-kubectl get secret --namespace consul consul-ca-cert -o yaml | \
-kubectl --context arn:aws:eks:us-east-2:711129375688:cluster/<cluster name> apply --namespace consul -f -
-```
-
-4. Copy the server key to the non-default partition cluster running your workloads.
-
-```
-kubectl get secret --namespace consul consul-ca-key -o yaml | \
-kubectl --context arn:aws:eks:us-east-2:711129375688:cluster/<cluster name> apply --namespace consul -f -
-```
-5. If ACLs were enabled in the server configuration values file, copy the token to the non-default partition cluster running your workloads.
-
-```
-kubectl get secret --namespace consul consul-partitions-acl-token -o yaml | \
-kubectl --context arn:aws:eks:us-east-2:711129375688:cluster/<cluster name>  apply --namespace consul -f -
-
-```
-
-6. Find expose server in DC1 to establish connection from client cluster
-
-```
-kubectl get svc -n consul # on DC1
-
-NAME                             TYPE           CLUSTER-IP       EXTERNAL-IP                                                               PORT(S)
-consul-consul-expose-servers     LoadBalancer   172.20.230.215   a1fecfc8ccdd74b37b5273d7da904e79-1244336522.us-east-2.elb.amazonaws.com   8501:31424/TCP,8301:30094/TCP,8300:31439/TCP,8502:31755/TCP
-
-```
-
-7. find kubernetes master on the client side kubernetes cluster, place the master aputput into the k8sAuthMethodHost: 
-
-
-```
-kubectl cluster-info 
-
-Kubernetes master is running at https://6FA8E20A2D3D90DC7DFC6B39B761BE52.sk1.us-east-2.eks.amazonaws.com
-CoreDNS is running at https://6FA8E20A2D3D90DC7DFC6B39B761BE52.sk1.us-east-2.eks.amazonaws.com/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-
-```
-```
-helm install -f config.yaml consul hashicorp/apservice-dc3.yaml -n consul --debug
-
-kubectl get pods -n consul
-
-NAME                                 READY   STATUS      RESTARTS   AGE
-consul-consul-partition-init-zzmsz   0/1     Completed   0          3h52m
-
-```
- 
