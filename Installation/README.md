@@ -78,7 +78,7 @@ dashboard   LoadBalancer   10.0.179.160   40.88.218.67  9002:32696/TCP   22s
 # Deploy Consul on second Kubernetes cluster (dc2).
 
 
-8. Set context and deploy Consul on dc2
+1. Set context and deploy Consul on dc2
 
 ```
 kubectl config use-context $dc2
@@ -94,7 +94,7 @@ If not, you need to upgrade your helm deployment:
 helm upgrade $dc2 hashicorp/consul  --version $VERSION --values consul-values.yaml
 ```
 
-9. Deploy counting service on dc2. This will be the failover service instance.
+2. Deploy counting service on dc2. This will be the failover service instance.
 
 ```
 kubectl apply -f counting.yaml --context $dc2
