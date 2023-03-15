@@ -181,3 +181,11 @@ sudo mv helm /usr/local/bin/.
 ```
 sudo yum install git
 ```
+
+5. Install the AWS command line interface tool:
+```
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+sudo yum install unzip
+unzip awscliv2.zip
+sudo ./aws/install
+```
