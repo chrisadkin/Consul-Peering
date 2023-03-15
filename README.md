@@ -29,4 +29,4 @@
 
 [3. Create the Cluster Peering Connection](https://github.com/chrisadkin/Consul-Peering/tree/main/Peering-Connection)  
 
-[4. Run the demonstration](https://github.com/chrisadkin/Consul-Peering/tree/main/Running-The-Demo)  
+[4. Run the demonstration](https://github.com/chrisadkin/Consul-Peering/tree/main/Running-The-Demo) 
