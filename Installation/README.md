@@ -27,23 +27,24 @@ kubectl create ns consul
 
 5. Create the secret that contains the consul license key:
 ```
-kubectl create secret generic consul-license --from-literal="key=$(<YOUR LICENSE FROM CSM>)" -n consul
+CONSUL_LIC_KEY=<your consul license key string goes here>
+kubectl create secret generic consul-license --from-literal="key=$CONSUL_LIC_KEY" -n consul
 ```
 
-6. Set context and deploy Consul on dc1
+6. Add the Helm chart repository for consul:
+```
+helm repo add hashicorp https://helm.releases.hashicorp.com
+```
 
+7. Set context and deploy Consul on dc1
 ```
 kubectl config use-context $dc1
-``` 
-
-```
-helm install $dc1 hashicorp/consul --version $VERSION --values consul-values.yaml                                  
+helm install $dc1 hashicorp/consul --version $VERSION --values consul-values.yaml --namespace consul                                 
 ```
 
-7. Confirm Consul deployed sucessfully
-
+8. Confirm Consul deployed sucessfully
 ```
-kubectl get pods --context $dc1
+kubectl get pods -n consul
 NAME                                               READY   STATUS    RESTARTS   AGE
 
 dc1-consul-connect-injector-6694d44877-jvp4s       1/1     Running   0          2m
@@ -60,14 +61,14 @@ helm upgrade $dc1 hashicorp/consul  --version $VERSION --values consul-values.ya
 
 8. Deploy both dashboard and counting service on dc1
 ```
-kubectl apply -f dashboard.yaml --context $dc1
-kubectl apply -f counting.yaml --context $dc1
+kubectl apply -f dashboard.yaml --context $dc1 -n consul
+kubectl apply -f counting.yaml --context $dc1 -n consul
 ```
 
 9. Using your browser, check the dashboard UI and confirm the number displayed is incrementing. 
    You can get the dashboard UI's EXTERNAL IP address with command below. Make sure to append port :9002 to the browser URL.  
 ```   
-kubectl get service dashboard --context $dc1
+kubectl get service dashboard --context $dc1 -n consul
 ```
 
 Example: 
