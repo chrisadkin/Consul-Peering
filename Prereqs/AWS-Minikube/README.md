@@ -176,3 +176,8 @@ tar xvf helm-v3.11.1-linux-amd64.tar.gz
 cd linux-amd64/
 sudo mv helm /usr/local/bin/.
 ```
+
+4. Install git:
+```
+sudo yum install git
+```
