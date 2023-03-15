@@ -2,7 +2,7 @@
 
 1. Clone this repo
 ```
-git clone https://github.com/vanphan24/cluster-peering-failover-demo.git
+git clone https://github.com/chrisadkin/Cluster-Peering.git
 ```
 
 2. Nagivate to the **cluster-peering-failover-demo/countingapp** folder. 
