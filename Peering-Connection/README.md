@@ -1,4 +1,4 @@
-# Create cluster peering connection
+# Peering and Demo Setup
 
 You can establish the peering connections using the Consul UI or using Kubernetes CRDs. The steps using the UI are extremely easy and straight forward so we will focus on using the Kubernetes CRDs in this section.
 
