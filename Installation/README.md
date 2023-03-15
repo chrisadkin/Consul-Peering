@@ -98,7 +98,7 @@ Note: Run ```kubectl get crd``` and make sure that exportedservices.consul.hashi
 If not, you need to upgrade your helm deployment:  
 
 ```
-helm upgrade $dc2 hashicorp/consul  --version $VERSION --values consul-values.yaml
+helm upgrade $dc2 hashicorp/consul  --version $VERSION --values consul-values.yaml --namespace consul
 ```
 
 2. Deploy counting service on dc2. This will be the failover service instance.
