@@ -27,6 +27,6 @@
 
 [2. Deploy Consul](https://github.com/chrisadkin/Consul-Peering/tree/main/Installation)  
 
-[3. Create the Cluster Peering Connection](https://github.com/chrisadkin/Consul-Peering/tree/main/Peering-Connection)  
+[3. Peering and Demo Setup](https://github.com/chrisadkin/Consul-Peering/tree/main/Peering-Connection)  
 
 [4. Run the demonstration](https://github.com/chrisadkin/Consul-Peering/tree/main/Running-The-Demo) 
