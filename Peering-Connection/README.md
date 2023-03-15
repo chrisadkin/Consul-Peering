@@ -53,3 +53,31 @@ Note: This step will establish dc2 as the Dialer and will connect Consul on dc2 
 ```
 kubectl apply -f  dialer-dc2.yaml --context $dc2
 ```
+
+6. Export counting service from dc2 to dc1.
+
+```
+kubectl apply -f exportedsvc-counting.yaml --context $dc2
+```
+
+7. Apply service-resolver file on dc1. This service-resolver.yaml file will tell Consul on dc1 how to handle failovers if the counting service fails locally. 
+
+Note: Make sure the name of the peer in the service-resolver file matches the name to gave for each peer when you established peering (either in the UI or using CRD acceptor and dialer files).
+
+```
+kubectl apply -f service-resolver.yaml --context $dc1
+```
+
+8. If you have deny-all intentions set or if ACL's are enabled (which means deny-all intentions are enabled), set intentions using intention.yaml file.  
+
+Note: The UI on Consul version 1.14 does not yet recognize peers for Intention creation. Therefore apply intentions using the CLI, API, or CRDs.
+
+```
+kubectl apply -f intentions.yaml --context $dc2
+```
+
+9. Apply the proxy-defaults on both datacenters to ensure data plane traffic goes via local mesh gateways 
+```
+kubectl apply -f proxydefaults.yaml --context $dc1
+kubectl apply -f proxydefaults.yaml --context $dc2
+```
