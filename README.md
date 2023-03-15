@@ -21,7 +21,7 @@
 ![image](https://github.com/chrisadkin/Consul-Peering/blob/main/images/01-two-dc-configuration.png)
 
 # Instructions for Deploying and Running The Demonstration
-1. At present there are two Terraform configurations for provisioning the base infrastructure: 
+[1. At present there are two Terraform configurations for provisioning the base infrastructure:](https://github.com/chrisadkin/Consul-Peering/tree/main/Prereqs) 
 - [Azure Kubernetes Services](https://github.com/chrisadkin/Consul-Peering/tree/main/Prereqs/Azure)  
 - [Minikube on AWS EC2 instances](https://github.com/chrisadkin/Consul-Peering/tree/main/Prereqs/AWS-Minikube)  
 
