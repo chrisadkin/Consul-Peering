@@ -83,7 +83,7 @@ dashboard   LoadBalancer   10.0.179.160   40.88.218.67  9002:32696/TCP   22s
 **This is your current configuration:**  
 ![alt text](https://github.com/vanphan24/cluster-peering-failover-demo/blob/main/images/diagram-before2.png)
 
-**Exposing The Dashboard IP Address for AWS**
+**Exposing The Dashboard IP Address for AWS to a client laptop/PC**
 
 If the Kubernetes cluster has been delpoyed on AWS, either via EKS or minikube running on an EC2 instance an elastic IP address association
 will need to be created between the elastic ip address for the consul dashboard service and the external ip address of the dashboard service.
