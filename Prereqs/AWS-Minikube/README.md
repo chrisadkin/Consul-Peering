@@ -121,7 +121,7 @@ minikube addons -p dc1 configure metallb
 4. Check that configuration details entered are reflected in the metallb config map:
 
 ```
-kubectl config use_context dc1
+kubectl config use-context dc1
 kubectl get configmap/config -n metallb-system -o yaml
 ```
    Example output:   
