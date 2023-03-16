@@ -102,12 +102,12 @@ minikube addons -p dc1 list | grep metallb
 
 2. Enable metallb for cluster dc1:
 ```
-minikube addons -p *dc1* enable metallb
+minikube addons -p dc1 enable metallb
 ```
 
 3. Configure the IP address pool for metallb:
 ```
-minikube addons -p *dc1* configure metallb
+minikube addons -p dc1 configure metallb
 ```
    Below are example values used for dc1 and output, the IP address range will be dependant upon the EC2 instance VPC:
 ```
