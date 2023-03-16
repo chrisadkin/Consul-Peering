@@ -19,30 +19,34 @@ export dc2=<your-kubernetes context-for-dc2>
 export VERSION=1.0.0
 ```
 
-4. Create a consul namespace:
+4. Set the current context to dc1:
+```
+kubectl config use-context $dc1
+```
+
+5. Create a consul namespace:
 
 ```
 kubectl create ns consul
 ```
 
-5. Create the secret that contains the consul license key:
+6. Create the secret that contains the consul license key:
 ```
 CONSUL_LIC_KEY=<your consul license key string goes here>
 kubectl create secret generic consul-license --from-literal="key=$CONSUL_LIC_KEY" -n consul
 ```
 
-6. Add the Helm chart repository for consul:
+7. Add the Helm chart repository for consul:
 ```
 helm repo add hashicorp https://helm.releases.hashicorp.com
 ```
 
-7. Set context and deploy Consul on dc1
+8. Set context and deploy Consul on dc1
 ```
-kubectl config use-context $dc1
 helm install $dc1 hashicorp/consul --version $VERSION --values consul-values.yaml --namespace consul                                 
 ```
 
-8. Confirm Consul deployed sucessfully
+9. Confirm Consul deployed sucessfully
 ```
 kubectl get pods -n consul
 NAME                                               READY   STATUS    RESTARTS   AGE
@@ -59,13 +63,13 @@ If not, you need to upgrade your helm deployment:
 helm upgrade $dc1 hashicorp/consul  --version $VERSION --values consul-values.yaml
 ```
 
-8. Deploy both dashboard and counting service on dc1
+10. Deploy both dashboard and counting service on dc1
 ```
 kubectl apply -f dashboard.yaml --context $dc1 -n consul
 kubectl apply -f counting.yaml --context $dc1 -n consul
 ```
 
-9. Using your browser, check the dashboard UI and confirm the number displayed is incrementing. 
+11. Using your browser, check the dashboard UI and confirm the number displayed is incrementing. 
    You can get the dashboard UI's EXTERNAL IP address with command below. Make sure to append port :9002 to the browser URL.  
 ```   
 kubectl get service dashboard --context $dc1 -n consul
