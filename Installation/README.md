@@ -32,8 +32,8 @@ kubectl create ns consul
 
 6. Create the secret that contains the consul license key:
 ```
-CONSUL_LIC_KEY=<your consul license key string goes here>
-kubectl create secret generic consul-license --from-literal="key=$CONSUL_LIC_KEY" -n consul
+secret=$(cat consul.hclic)
+kubectl create secret generic consul-ent-license --from-literal="key=${secret}" -n consul
 ```
 
 7. Add the Helm chart repository for consul:
